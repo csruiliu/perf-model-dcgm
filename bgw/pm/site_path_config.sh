@@ -10,7 +10,7 @@
 #b) your compute node configuration.
 
 #N10_BGW=/path/to/berkeleygw-workflow
-export N10_BGW="/global/scratch/users/rliu5/bgw-pm-h100-fp64"
+export N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-h100-fp64"
 if [[ -z "${N10_BGW}" ]]; then
     echo "The N10_BGW variable is not defined."
     echo "Please set N10_BGW in site_path_config.sh and try again."
