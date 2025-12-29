@@ -5,12 +5,11 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --cpus-per-task=32
-#SBATCH --cpu-bind=cores
 #SBATCH -A nstaff
 #SBATCH -J bgw_sig_Si214
 #SBATCH -C gpu&hbm40g
 #SBATCH --perf=generic
-#SBATCH -o /global/homes/r/ruiliu/perf-model-dcgm/bgw/pm/results/SIGMA_SMALL_FP64_%j/%j.out
+#SBATCH -o /global/homes/r/ruiliu/perf-model-dcgm/bgw/pm/results/SIG_SMALL_FP64_%j/%j.out
 
 podman-hpc run -d -it --name dcgm-container --rm --gpu --cap-add SYS_ADMIN nvcr.io/nvidia/cloud-native/dcgm:4.2.3-1-ubuntu22.04
 
@@ -20,7 +19,7 @@ export BGW_PM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/pm"
 
 export BGW_SMALL="${BGW_PM}/small"
 
-export RESULTS_DIR="${BGW_PM}/results/SIGMA_SMALL_FP64_${SLURM_JOB_ID}"
+export RESULTS_DIR="${BGW_PM}/results/SIG_SMALL_FP64_${SLURM_JOB_ID}"
 
 mkdir -p $RESULTS_DIR
 #stripe_large $RESULTS_DIR
@@ -54,7 +53,7 @@ dcgm_delay=${DCGM_SAMPLE_RATE} srun -N 1 -c 32 --ntasks-per-node=1 --gpus-per-no
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
-printf "Elapsed Time: %.2f seconds\n" $elapsed > sigma_d${DCGM_SAMPLE_RATE}_runtime.out
+printf "Elapsed Time: %.2f seconds\n" $elapsed > sig_small_fp64_${DCGM_SAMPLE_RATE}_runtime.out
 
 unlink WFN_inner.h5
 unlink RHO

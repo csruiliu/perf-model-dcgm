@@ -5,12 +5,11 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --cpus-per-task=32
-#SBATCH --cpu-bind=cores
 #SBATCH -A nstaff
 #SBATCH -J bgw_eps_Si214
 #SBATCH -C gpu&hbm40g
 #SBATCH --perf=generic
-#SBATCH -o /global/homes/r/ruiliu/perf-model-dcgm/bgw/pm/results/EPSILON_SMALL_FP64_%j/%j.out
+#SBATCH -o /global/homes/r/ruiliu/perf-model-dcgm/bgw/pm/results/EPS_SMALL_FP64_%j/%j.out
 
 podman-hpc run -d -it --name dcgm-container --rm --gpu --cap-add SYS_ADMIN nvcr.io/nvidia/cloud-native/dcgm:4.2.3-1-ubuntu22.04
 
@@ -20,7 +19,7 @@ export BGW_PM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/pm"
 
 export BGW_SMALL="${BGW_PM}/small"
 
-export RESULTS_DIR="${BGW_PM}/results/EPSILON_SMALL_FP64_${SLURM_JOB_ID}"
+export RESULTS_DIR="${BGW_PM}/results/EPS_SMALL_FP64_${SLURM_JOB_ID}"
 
 mkdir -p ${RESULTS_DIR}
 #stripe_large $RESULTS_DIR
@@ -46,7 +45,7 @@ DCGM_PATH="${BGW_PM}/wrap_dcgmi_container.sh"
 export DCGM_SAMPLE_RATE=1000
 
 start=$(date +%s.%N)
-dcgm_delay=${DCGM_SAMPLE_RATE} srun -N 1 -c 32 --ntasks-per-node=1 --gpus-per-node=1 --cpu-bind=cores ${DCGM_PATH} ./epsilon.cplx.x
+dcgm_delay=${DCGM_SAMPLE_RATE} srun -N 1 -c 32 --ntasks-per-node=1 --gpus-per-node=1 ${DCGM_PATH} ./epsilon.cplx.x
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
