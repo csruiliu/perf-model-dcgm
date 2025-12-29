@@ -10,7 +10,7 @@
 #b) your compute node configuration.
 
 #N10_BGW=/path/to/berkeleygw-workflow
-N10_BGW=$HOME/BerkeleyGW
+export N10_BGW="/global/scratch/users/rliu5/bgw-lrc-h100-fp64"
 if [[ -z "${N10_BGW}" ]]; then
     echo "The N10_BGW variable is not defined."
     echo "Please set N10_BGW in site_path_config.sh and try again."
@@ -21,23 +21,21 @@ fi
 HDF_LIBPATH=
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HDF_LIBPATH
 
-export N10_BGW=$HOME/BerkeleyGW
-export N10_BGW_WORKFLOW=$N10_BGW/berkeleygw-workflow
-
-#executables
-BGW_DIR=$N10_BGW/BerkeleyGW-master/bin
+# Path for execution
+#export N10_BGW_WORKFLOW=$N10_BGW/berkeleygw-workflow
+export N10_BGW_EXEC=$N10_BGW/BerkeleyGW-n10/bin
 
 #input data
-Si_WFN_folder=$N10_BGW_WORKFLOW/Si_WFN_folder
+Si_WFN_folder=$N10_BGW/Si_WFN_folder
 Si214_WFN_folder=$Si_WFN_folder/Si214/WFN_file
 Si510_WFN_folder=$Si_WFN_folder/Si510/WFN_file
 Si998_WFN_folder=$Si_WFN_folder/Si998/WFN_file
 Si2742_WFN_folder=$Si_WFN_folder/Si2742/WFN_file
 
-Si214_Benchmark_folder=$N10_BGW_WORKFLOW/benchmark/small_Si214
-Si510_Benchmark_folder_Medium=$N10_BGW_WORKFLOW/benchmark/medium_Si510
-Si998_Benchmark_folder_=$N10_BGW_WORKFLOW/benchmark/reference_Si998
-Si2742_Benchmark_folder_Small=$N10_BGW_WORKFLOW/benchmark/target_Si2742
+#Si214_Benchmark_folder=$N10_BGW_WORKFLOW/benchmark/small_Si214
+#Si510_Benchmark_folder_Medium=$N10_BGW_WORKFLOW/benchmark/medium_Si510
+#Si998_Benchmark_folder_=$N10_BGW_WORKFLOW/benchmark/reference_Si998
+#Si2742_Benchmark_folder_Small=$N10_BGW_WORKFLOW/benchmark/target_Si2742
 
 #any modules that should be loaded at runtime
 if module list 2>&1 | grep -q "PrgEnv-gnu"; then
