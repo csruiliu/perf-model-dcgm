@@ -1,8 +1,8 @@
 #!/bin/bash
 
-ml cmake
+module load gcc/11.4.0
 
-BASE_DIRECTORY=/pscratch/sd/r/ruiliu/lammps-pm-a100-fp64
+BASE_DIRECTORY=/global/scratch/users/rliu5/lammps-lrc-a40-fp32
 SOURCE_DIRECTORY=${BASE_DIRECTORY}/lammps
 BUILD_DIRECTORY=${BASE_DIRECTORY}/build_lammps
 INSTALL_DIRECTORY=${BASE_DIRECTORY}/install_lammps
@@ -25,16 +25,17 @@ cmake ${SOURCE_DIRECTORY}/cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_VERBOSE_MAKEFILE=ON \
     -D CMAKE_CXX_COMPILER=${SOURCE_DIRECTORY}/lib/kokkos/bin/nvcc_wrapper \
-    -D MPI_C_COMPILER=`which cc` \
-    -D MPI_CXX_COMPILER=`which CC` \
+    -D MPI_C_COMPILER=mpicc \
+    -D MPI_CXX_COMPILER=mpicxx \
     -D BUILD_MPI=yes \
     -D FFT=KISS \
     -D FFT_KOKKOS=CUFFT \
     -D PKG_ML-SNAP=yes \
     -D PKG_KOKKOS=yes \
+    -D KOKKOS_PREC=single \
     -D Kokkos_ENABLE_CUDA=yes \
     -D Kokkos_ENABLE_SERIAL=yes \
     -D Kokkos_ENABLE_IMPL_CUDA_MALLOC_ASYNC=OFF \
-    -D Kokkos_ARCH_AMPERE80=ON && \
-cmake --build ${BUILD_DIRECTORY} --target all -- -j1 && \
-cmake --build ${BUILD_DIRECTORY} --target install -- -j1
+    -D Kokkos_ARCH_AMPERE86=ON && \
+cmake --build ${BUILD_DIRECTORY} --target all -- -j4 && \
+cmake --build ${BUILD_DIRECTORY} --target install -- -j4

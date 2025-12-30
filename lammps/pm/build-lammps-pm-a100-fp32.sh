@@ -10,8 +10,8 @@ INSTALL_DIRECTORY=${BASE_DIRECTORY}/install_lammps
 cd $BASE_DIRECTORY
 if [ ! -d ${SOURCE_DIRECTORY} ]
 then
-  # 372c8cdaba
   git clone https://github.com/lammps/lammps
+  git checkout 372c8cdabab05268417ae7627b0a3005a9da2642
 fi
 
 mkdir -p ${BUILD_DIRECTORY}

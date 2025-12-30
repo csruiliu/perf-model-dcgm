@@ -9,10 +9,9 @@
 #SBATCH -C gpu&hbm40g
 #SBATCH -G 1
 #SBATCH --gpu-bind=none
-#SBATCH --cpu-bind=cores
 #SBATCH --perf=generic
 #SBATCH -t 00:30:00
-#SBATCH -o /global/homes/r/ruiliu/perf-model-dcgm/lammps/pm/results/LPS_SMALL_FP32_%j/%j.out
+#SBATCH -o /global/homes/r/ruiliu/perf-model-dcgm/lammps/pm/results/LPS_SMALL_FP64_%j/%j.out
 
 podman-hpc run -d -it --name dcgm-container --rm --gpu --cap-add SYS_ADMIN -p 5555:5555 nvcr.io/nvidia/cloud-native/dcgm:4.2.3-1-ubuntu22.04
 
@@ -35,7 +34,7 @@ export RESULTS_DIR="${LAMMPS_PM}/results/LPS_SMALL_FP64_${SLURM_JOBID}"
 
 mkdir -p ${RESULTS_DIR}
 cd    ${RESULTS_DIR}
-ln -s ${LAMMPS_COMM}/common .
+ln -s ${LAMMPS_COMM} .
 ln -s ${LAMMPS_PM}/wrap_dcgmi_container.sh .
 
 # This is needed if LAMMPS is built using cmake.
