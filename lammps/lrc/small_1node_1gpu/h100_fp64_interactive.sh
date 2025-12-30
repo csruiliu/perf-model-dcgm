@@ -9,7 +9,7 @@ BENCH_SPEC="\
         -var nx $nn -var ny $nn -var nz $nn \
         -var nsteps 100"
 
-RESULTS_DIR="/global/home/users/rliu5/perf-model-dcgm/lammps/pm/results/LPS_SMALL_FP64_${SLURM_JOB_ID}"
+RESULTS_DIR="/global/home/users/rliu5/perf-model-dcgm/lammps/lrc/results/LPS_SMALL_FP64_${SLURM_JOB_ID}"
 
 LAMMPS_DIR="/global/scratch/users/rliu5/lammps-lrc-h100-fp64"
 
