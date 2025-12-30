@@ -34,3 +34,4 @@ unlink epsilon.cplx.x
 unlink epsilon.inp
 unlink WFN.h5
 unlink WFNq.h5
+rm -f eps0mat.h5
