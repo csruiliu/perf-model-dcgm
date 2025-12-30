@@ -24,7 +24,7 @@ N10_BGW_EXEC="${N10_BGW}/BerkeleyGW-n10/bin"
 
 BGW_PM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/pm"
 
-BGW_SMALL="${BGW_PM}/small_1node_1gpu"
+BGW_COMM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/common"
 
 Si_WFN_folder=${N10_BGW}/Si_WFN_folder
 
@@ -38,7 +38,7 @@ cd    $RESULTS_DIR
 
 ln -s ${N10_BGW_EXEC}/sigma.cplx.x .
 NNPOOL=2
-cat ${BGW_SMALL}/sigma-si214.inp | sed "s/NNPOOL/${NNPOOL}/g" > sigma.inp
+cat ${BGW_COMM}/sigma-si214.inp | sed "s/NNPOOL/${NNPOOL}/g" > sigma.inp
 ln -sfn  ${Si214_WFN_folder}/WFN_out.h5   ./WFN_inner.h5
 ln -sfn  ${Si214_WFN_folder}/RHO          .
 ln -sfn  ${Si214_WFN_folder}/VXC          .
