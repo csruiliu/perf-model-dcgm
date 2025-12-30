@@ -34,7 +34,7 @@ cd    ${RESULTS_DIR}
 
 ln -s ${N10_BGW_EXEC}/sigma.cplx.x .
 NNPOOL=2
-cat ${BGW_SMALL}/sigma-si214.inp | sed "s/NNPOOL/${NNPOOL}/g" > sigma.inp
+cat ${BGW_COMM}/sigma-si214.inp | sed "s/NNPOOL/${NNPOOL}/g" > sigma.inp
 ln -sfn  ${Si214_WFN_folder}/WFN_out.h5   ./WFN_inner.h5
 ln -sfn  ${Si214_WFN_folder}/RHO          .
 ln -sfn  ${Si214_WFN_folder}/VXC          .
