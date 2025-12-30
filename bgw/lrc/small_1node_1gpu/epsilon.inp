@@ -1,0 +1,21 @@
+epsilon_cutoff       8.0
+
+#future versions of BGW might not require setting number_bands
+# number_bands 6340
+
+begin qpoints
+  0.0 0.0 0.05  1.0  1
+end
+
+# Read from WFN.h5 and WFNq.h5. Only supported by Epsilon.
+use_wfn_hdf5
+
+dont_check_norms
+
+comm_nonblocking_cyclic
+
+# accel_chi_summation_no_full_offload
+
+max_mem_nv_block_algo 20
+
+number_valence_pools  2

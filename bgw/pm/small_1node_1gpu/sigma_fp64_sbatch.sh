@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -t 00:20:00
+#SBATCH -t 01:00:00
 #SBATCH --qos=sow
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -13,16 +13,22 @@
 
 podman-hpc run -d -it --name dcgm-container --rm --gpu --cap-add SYS_ADMIN nvcr.io/nvidia/cloud-native/dcgm:4.2.3-1-ubuntu22.04
 
-export N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-a100-fp64"
+N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-a100-fp64"
 if [[ -z "${N10_BGW}" ]]; then
     echo "The N10_BGW variable is not defined."
     echo "Please set N10_BGW in site_path_config.sh and try again."
     exit 0
 fi
 
-source ../../common/site_path_config.sh
+N10_BGW_EXEC="${N10_BGW}/BerkeleyGW-n10/bin"
 
-export BGW_SMALL="${BGW_PM}/small_1node_1gpu"
+BGW_PM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/pm"
+
+BGW_SMALL="${BGW_PM}/small_1node_1gpu"
+
+Si_WFN_folder=${N10_BGW}/Si_WFN_folder
+
+Si214_WFN_folder=${Si_WFN_folder}/Si214/WFN_file
 
 export RESULTS_DIR="${BGW_PM}/results/SIG_SMALL_FP64_${SLURM_JOB_ID}"
 
@@ -51,7 +57,7 @@ export BGW_WFN_HDF5_INDEPENDENT=1
 
 DCGM_PATH="${BGW_PM}/wrap_dcgmi_container.sh"
 
-export DCGM_SAMPLE_RATE=1000
+DCGM_SAMPLE_RATE=1000
 
 start=$(date +%s.%N)
 dcgm_delay=${DCGM_SAMPLE_RATE} srun -N 1 -c 32 --ntasks-per-node=1 --gpus-per-node=1 --cpu-bind=cores ${DCGM_PATH} ./sigma.cplx.x
