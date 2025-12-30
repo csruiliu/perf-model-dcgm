@@ -34,7 +34,7 @@ gpus_per_node=1
 
 input="-k on g $gpus_per_node -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} "
 
-command="srun -n $gpus_per_node $EXE $input"
+command="srun -n $gpus_per_node ./wrap_dcgmi_container.sh $EXE $input"
 
 echo $command
 
