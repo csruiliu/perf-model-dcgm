@@ -12,7 +12,7 @@ N10_BGW_EXEC="${N10_BGW}/BerkeleyGW-n10/bin"
 
 BGW_PM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/pm"
 
-BGW_SMALL="${BGW_PM}/small_1node_1gpu"
+BGW_COMM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/common"
 
 Si_WFN_folder=${N10_BGW}/Si_WFN_folder
 
@@ -24,7 +24,7 @@ mkdir -p $RESULTS_DIR
 #stripe_large $RESULTS_DIR
 cd    ${RESULTS_DIR}
 ln -s ${N10_BGW_EXEC}/epsilon.cplx.x .
-ln -s  ${BGW_SMALL}/epsilon.inp .
+ln -s  ${BGW_COMM}/epsilon-si214.inp epsilon.inp 
 ln -sfn  ${Si214_WFN_folder}/WFNq.h5      .
 ln -sfn  ${Si214_WFN_folder}/WFN_out.h5   ./WFN.h5
 

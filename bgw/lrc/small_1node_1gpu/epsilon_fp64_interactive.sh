@@ -18,21 +18,21 @@ fi
 
 N10_BGW_EXEC="${N10_BGW}/BerkeleyGW-n10/bin"
 
-BGW_LRC="/global/homes/r/ruiliu/perf-model-dcgm/bgw/lrc"
+BGW_LRC="/global/home/users/rliu5/perf-model-dcgm/bgw/lrc"
 
-BGW_SMALL="${BGW_LRC}/small_1node_1gpu"
+BGW_COMM="/global/home/users/rliu5/perf-model-dcgm/bgw/common"
 
 Si_WFN_folder=${N10_BGW}/Si_WFN_folder
 
 Si214_WFN_folder=${Si_WFN_folder}/Si214/WFN_file
 
-export RESULTS_DIR="${BGW_PM}/results/EPS_SMALL_FP64_${SLURM_JOB_ID}"
+export RESULTS_DIR="${BGW_LRC}/results/EPS_SMALL_FP64_${SLURM_JOB_ID}"
 
 mkdir -p $RESULTS_DIR
 #stripe_large $RESULTS_DIR
 cd    ${RESULTS_DIR}
 ln -s ${N10_BGW_EXEC}/epsilon.cplx.x .
-ln -s  ${BGW_SMALL}/epsilon.inp .
+ln -s  ${BGW_COMM}/epsilon-si214.inp epsilon.inp
 ln -sfn  ${Si214_WFN_folder}/WFNq.h5      .
 ln -sfn  ${Si214_WFN_folder}/WFN_out.h5   ./WFN.h5
 
@@ -46,7 +46,7 @@ export HDF5_USE_FILE_LOCKING=FALSE
 export BGW_HDF5_WRITE_REDIST=1
 export BGW_WFN_HDF5_INDEPENDENT=1
 
-DCGM_PATH="${BGW_PM}/wrap_dcgmi_container.sh"
+DCGM_PATH="${BGW_LRC}/wrap_dcgmi_container.sh"
 
 DCGM_SAMPLE_RATE=1000
 
