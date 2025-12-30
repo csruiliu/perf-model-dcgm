@@ -3,16 +3,10 @@
 # Allocating resources first, the following command is an example
 # salloc -p es2 -A pc_perfume -q es2_normal --nodes=1 --ntasks=1 --cpus-per-task=16 --gres=gpu:H100:1 -t 12:00:00
 
-singularity instance start \
-  --fakeroot \
-  --nv \
-  --writable-tmpfs \
-  --bind /tmp:/tmp \
-  --network=none \
-  docker://nvidia/dcgm:4.4.1-2-ubuntu22.04 \
-  dcgm-instance
+# Start Singularity server first
+# singularity instance start --fakeroot --nv --writable-tmpfs --bind /tmp:/tmp --network=none docker://nvidia/dcgm:4.4.1-2-ubuntu22.04 dcgm-instance
 
-singularity exec instance://dcgm-instance nv-hostengine -n &
+# singularity exec instance://dcgm-instance nv-hostengine -n &
 
 #N10_BGW=/path/to/berkeleygw-workflow
 N10_BGW="/global/scratch/users/rliu5/bgw-lrc-h100-fp64"
