@@ -2,11 +2,9 @@
 
 source ../site_path_config.sh
 
-export BGW_PM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/pm"
+export BGW_SMALL="${BGW_PM}/small_1node_1gpu"
 
-export BGW_SMALL="${BGW_PM}/small"
-
-export RESULTS_DIR="${BGW_PM}/results/EPSILON_SMALL_FP64_${SLURM_JOB_ID}"
+export RESULTS_DIR="${BGW_PM}/results/EPS_SMALL_FP64_${SLURM_JOB_ID}"
 
 mkdir -p $RESULTS_DIR
 #stripe_large $RESULTS_DIR

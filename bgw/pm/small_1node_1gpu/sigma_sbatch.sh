@@ -15,9 +15,7 @@ podman-hpc run -d -it --name dcgm-container --rm --gpu --cap-add SYS_ADMIN nvcr.
 
 source ../site_path_config.sh
 
-export BGW_PM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/pm"
-
-export BGW_SMALL="${BGW_PM}/small"
+export BGW_SMALL="${BGW_PM}/small_1node_1gpu"
 
 export RESULTS_DIR="${BGW_PM}/results/SIG_SMALL_FP64_${SLURM_JOB_ID}"
 

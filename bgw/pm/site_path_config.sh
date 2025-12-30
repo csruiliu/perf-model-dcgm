@@ -10,7 +10,7 @@
 #b) your compute node configuration.
 
 #N10_BGW=/path/to/berkeleygw-workflow
-export N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-h100-fp64"
+export N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-a100-fp64"
 if [[ -z "${N10_BGW}" ]]; then
     echo "The N10_BGW variable is not defined."
     echo "Please set N10_BGW in site_path_config.sh and try again."
@@ -24,6 +24,8 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HDF_LIBPATH
 # Path for execution
 #export N10_BGW_WORKFLOW=$N10_BGW/berkeleygw-workflow
 export N10_BGW_EXEC="${N10_BGW}/BerkeleyGW-n10/bin"
+
+export BGW_PM="/global/homes/r/ruiliu/perf-model-dcgm/bgw/pm"
 
 #input data
 Si_WFN_folder=${N10_BGW}/Si_WFN_folder
