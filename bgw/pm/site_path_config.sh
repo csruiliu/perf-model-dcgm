@@ -1,22 +1,5 @@
 #!/bin/bash
 
-#This file sets the paths for all BGW executable, library and input-data.
-#It will need to be modified for each install site.
-#To minimize the number of files that must be updated with this path data,
-#all of the jobscripts will source this file.
-#
-#Jobscripts will still need to be updated to match
-#a) your queue system, or
-#b) your compute node configuration.
-
-#N10_BGW=/path/to/berkeleygw-workflow
-export N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-a100-fp64"
-if [[ -z "${N10_BGW}" ]]; then
-    echo "The N10_BGW variable is not defined."
-    echo "Please set N10_BGW in site_path_config.sh and try again."
-    exit 0
-fi
-
 #libraries... you may need to add FFTW, or Scalapack or...
 HDF_LIBPATH=
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HDF_LIBPATH

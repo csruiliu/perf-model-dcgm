@@ -15,6 +15,13 @@ podman-hpc run -d -it --name dcgm-container --rm --gpu --cap-add SYS_ADMIN nvcr.
 
 source ../site_path_config.sh
 
+export N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-a100-fp64"
+if [[ -z "${N10_BGW}" ]]; then
+    echo "The N10_BGW variable is not defined."
+    echo "Please set N10_BGW in site_path_config.sh and try again."
+    exit 0
+fi
+
 export BGW_SMALL="${BGW_PM}/small_1node_1gpu"
 
 export RESULTS_DIR="${BGW_PM}/results/EPS_SMALL_FP64_${SLURM_JOB_ID}"
