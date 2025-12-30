@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Using the following command to allocate resources first
+# Allocating resources first, the following command is an example
 # salloc -p es2 -A pc_perfume -q es2_normal --nodes=1 --ntasks=1 --cpus-per-task=16 --gres=gpu:H100:1 -t 12:00:00
 
 singularity instance start \
