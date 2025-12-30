@@ -13,7 +13,7 @@
 
 podman-hpc run -d -it --name dcgm-container --rm --gpu --cap-add SYS_ADMIN nvcr.io/nvidia/cloud-native/dcgm:4.2.3-1-ubuntu22.04
 
-source ../site_path_config.sh
+source ../../common/site_path_config.sh
 
 export N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-a100-fp64"
 if [[ -z "${N10_BGW}" ]]; then

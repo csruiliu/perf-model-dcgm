@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../site_path_config.sh
+source ../../common/site_path_config.sh
 
 #N10_BGW=/path/to/berkeleygw-workflow
 export N10_BGW="/pscratch/sd/r/ruiliu/bgw-pm-a100-fp64"
