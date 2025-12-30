@@ -26,7 +26,7 @@ Si_WFN_folder=${N10_BGW}/Si_WFN_folder
 
 Si214_WFN_folder=${Si_WFN_folder}/Si214/WFN_file
 
-export RESULTS_DIR="${BGW_LRC}/results/EPS_SMALL_FP64_${SLURM_JOB_ID}"
+export RESULTS_DIR="${BGW_LRC}/results/SIG_SMALL_FP64_${SLURM_JOB_ID}"
 
 mkdir -p $RESULTS_DIR
 #stripe_large $RESULTS_DIR
