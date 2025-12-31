@@ -46,11 +46,11 @@ dcgm_metrics+="1012," #nvlink_rx_bytes
 
 dcgm_metrics="${dcgm_metrics%?}"
 
-dcgm_outfile=dcgm.d$dcgm_delay.$SLURM_JOB_ID.$SLURM_STEP_ID-$SLURM_NODEID.out
+dcgm_outfile=dcgm.d$DCGM_DELAY.$SLURM_JOB_ID.$SLURM_STEP_ID-$SLURM_NODEID.out
 
 if [[ $SLURM_LOCALID -eq 0 ]]; then
     # For Perlmutter
-    podman-hpc exec -it dcgm-container dcgmi dmon -d $dcgm_delay -i 0 -e $dcgm_metrics > $RESULTS_DIR/$dcgm_outfile &
+    podman-hpc exec -it dcgm-container dcgmi dmon -d $DCGM_DELAY -i 0 -e $dcgm_metrics > $RESULTS_DIR/$dcgm_outfile &
     
     dcgmi_pid=$!
 fi

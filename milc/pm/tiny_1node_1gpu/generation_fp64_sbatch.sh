@@ -42,7 +42,7 @@ exe="${MILC_QCD_DIR}/ks_imp_rhmc/su3_rhmd_hisq"
 input=input_4864
 
 export OMP_NUM_THREADS=16
-export OMP_PLACES=threads
+export OMP_PLACES=cores
 export OMP_PROC_BIND=spread
 
 export QUDA_ENABLE_GDR=1
@@ -61,7 +61,7 @@ export RESULTS_DIR
 export DCGM_DELAY=1000
 
 start=$(date +%s.%N)
-srun -N 1 -n $SLURM_NTASKS -c $SLURM_CPUS_PER_TASK --cpu-bind=cores ./wrap_dcgmi_container.sh $exe $input
+srun -n $SLURM_NTASKS -c $SLURM_CPUS_PER_TASK --gpus-per-node=1 --cpu-bind=cores ./wrap_dcgmi_container.sh $exe $input
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 

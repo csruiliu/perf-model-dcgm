@@ -38,7 +38,7 @@ export RESULTS_DIR
 export DCGM_DELAY=1000
 
 start=$(date +%s.%N)
-srun -N 1 -n 1 -c 16 --gpus-per-node=1 --cpu-bind=cores $EXE $input > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
+srun -N 1 -n 1 -c 16 --gpus-per-node=1 --cpu-bind=cores ${DCGM_PATH} $EXE $input > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 

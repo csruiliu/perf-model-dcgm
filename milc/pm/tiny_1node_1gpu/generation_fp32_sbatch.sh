@@ -61,7 +61,7 @@ export RESULTS_DIR
 export DCGM_DELAY=1000
 
 start=$(date +%s.%N)
-srun -N 1 -n $SLURM_NTASKS -c $SLURM_CPUS_PER_TASK --cpu-bind=cores ./wrap_dcgmi_container.sh $exe $input
+srun -N 1 -n $SLURM_NTASKS -c $SLURM_CPUS_PER_TASK --gpus-per-node=1 --cpu-bind=cores ./wrap_dcgmi_container.sh $exe $input
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
