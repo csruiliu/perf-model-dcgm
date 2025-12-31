@@ -64,7 +64,7 @@ srun -n $SLURM_NTASKS ./wrap_dcgmi_container.sh $EXE $input
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
-printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/lps_small_fp64_${DCGM_DELAY}_runtime.out
+printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/runtime.out
 
 unlink common
 unlink wrap_dcgmi_container.sh

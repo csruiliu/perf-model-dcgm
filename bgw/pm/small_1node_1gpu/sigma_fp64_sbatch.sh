@@ -65,7 +65,7 @@ srun -N 1 -c 32 --ntasks-per-node=1 --gpus-per-node=1 --cpu-bind=cores ${DCGM_PA
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
-printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/sig_small_fp64_${DCGM_DELAY}_runtime.out
+printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/runtime.out
 
 unlink WFN_inner.h5
 unlink RHO

@@ -37,6 +37,6 @@ srun -n 1 $EXE $input > > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
-printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/lps_small_fp32_runtime.out
+printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/runtime.out
 
 unlink common
