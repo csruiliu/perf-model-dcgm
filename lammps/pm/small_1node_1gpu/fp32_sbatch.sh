@@ -55,7 +55,9 @@ export MPICH_GPU_SUPPORT_ENABLED=1
 
 input="-k on g 1 -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} " 
 
-command="srun -n $SLURM_NTASKS ./wrap_dcgmi_container.sh $EXE $input"
+DCGM_SAMPLE_RATE=1000
+
+command="dcgm_delay=${DCGM_SAMPLE_RATE} srun -n $SLURM_NTASKS ./wrap_dcgmi_container.sh $EXE $input"
 
 echo $command
 

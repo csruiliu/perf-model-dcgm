@@ -35,7 +35,9 @@ gpus_per_node=1
 
 input="-k on g $gpus_per_node -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} "
 
-command="srun -n $gpus_per_node ${DCGM_PATH} $EXE $input"
+DCGM_SAMPLE_RATE=1000
+
+command="dcgm_delay=${DCGM_SAMPLE_RATE} srun -n $gpus_per_node ${DCGM_PATH} $EXE $input"
 
 echo $command
 
