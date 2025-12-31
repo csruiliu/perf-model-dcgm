@@ -30,7 +30,7 @@ LAMMPS_COMM="/global/homes/r/ruiliu/perf-model-dcgm/lammps/common"
 
 LAMMPS_PM="/global/homes/r/ruiliu/perf-model-dcgm/lammps/pm"
 
-export RESULTS_DIR="${LAMMPS_PM}/results/LPS_SMALL_FP32_${SLURM_JOBID}"
+RESULTS_DIR="${LAMMPS_PM}/results/LPS_SMALL_FP32_${SLURM_JOBID}"
 
 mkdir -p ${RESULTS_DIR}
 cd    ${RESULTS_DIR}
@@ -55,13 +55,16 @@ export MPICH_GPU_SUPPORT_ENABLED=1
 
 input="-k on g 1 -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} " 
 
-DCGM_SAMPLE_RATE=1000
+# export these two variables for wrap_dcgmi_container.sh 
+export RESULTS_DIR
+export DCGM_DELAY=1000
 
-command="dcgm_delay=${DCGM_SAMPLE_RATE} srun -n $SLURM_NTASKS ./wrap_dcgmi_container.sh $EXE $input"
+start=$(date +%s.%N)
+srun -n $SLURM_NTASKS ./wrap_dcgmi_container.sh $EXE $input
+end=$(date +%s.%N)
+elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
-echo $command
-
-$command
+printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/lps_small_fp32_${DCGM_DELAY}_runtime.out
 
 unlink common
 unlink wrap_dcgmi_container.sh

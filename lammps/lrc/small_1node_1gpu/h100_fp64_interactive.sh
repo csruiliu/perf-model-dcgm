@@ -9,7 +9,7 @@ BENCH_SPEC="\
         -var nx $nn -var ny $nn -var nz $nn \
         -var nsteps 100"
 
-export RESULTS_DIR="/global/home/users/rliu5/perf-model-dcgm/lammps/lrc/results/LPS_SMALL_FP64_${SLURM_JOB_ID}"
+RESULTS_DIR="/global/home/users/rliu5/perf-model-dcgm/lammps/lrc/results/LPS_SMALL_FP64_${SLURM_JOB_ID}"
 
 LAMMPS_DIR="/global/scratch/users/rliu5/lammps-lrc-h100-fp64"
 
@@ -31,16 +31,17 @@ EXE="${LAMMPS_DIR}/install_lammps/bin/lmp"
 # Match the build env.
 export MPICH_GPU_SUPPORT_ENABLED=1
 
-gpus_per_node=1
+input="-k on g 1 -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} "
 
-input="-k on g $gpus_per_node -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} "
+# export these two variables for wrap_dcgmi_container.sh 
+export RESULTS_DIR
+export DCGM_DELAY=1000
 
-DCGM_SAMPLE_RATE=1000
+start=$(date +%s.%N)
+srun -n 1 ${DCGM_PATH} $EXE $input > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
+end=$(date +%s.%N)
+elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
-command="dcgm_delay=${DCGM_SAMPLE_RATE} srun -n $gpus_per_node ${DCGM_PATH} $EXE $input"
-
-echo $command
-
-$command > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
+printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/lps_small_fp64_${DCGM_DELAY}_runtime.out
 
 unlink common

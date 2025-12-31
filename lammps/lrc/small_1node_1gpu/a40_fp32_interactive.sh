@@ -30,14 +30,13 @@ EXE="${LAMMPS_DIR}/install_lammps/bin/lmp"
 # Match the build env.
 export MPICH_GPU_SUPPORT_ENABLED=1
 
-gpus_per_node=1
+input="-k on g 1 -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} "
 
-input="-k on g $gpus_per_node -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} "
+start=$(date +%s.%N)
+srun -n 1 $EXE $input > > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
+end=$(date +%s.%N)
+elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
-command="srun -n $gpus_per_node $EXE $input"
-
-echo $command
-
-$command > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
+printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/lps_small_fp32_runtime.out
 
 unlink common
