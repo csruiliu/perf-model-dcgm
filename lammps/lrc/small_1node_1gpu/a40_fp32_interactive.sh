@@ -33,7 +33,7 @@ export MPICH_GPU_SUPPORT_ENABLED=1
 input="-k on g 1 -sf kk -pk kokkos newton on neigh half ${BENCH_SPEC} "
 
 start=$(date +%s.%N)
-srun -n 1 $EXE $input > > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
+srun -N 1 -n 1 -c 16 --gpus-per-node=1 --cpu-bind=cores $EXE $input > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
