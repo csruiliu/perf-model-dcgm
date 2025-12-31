@@ -9,7 +9,6 @@
 #SBATCH --gres=gpu:H100:1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpu-bind=none
-#SBATCH --cpu-bind=cores
 #SBATCH --perf=generic
 
 export MPICH_GPU_SUPPORT_ENABLED=1
@@ -47,7 +46,9 @@ mkdir -p $RESULTS_DIR
 SLURM_NTASKS=1
 SLURM_CPUS_PER_TASK=32
 
-command="srun -n $SLURM_NTASKS -c $SLURM_CPUS_PER_TASK --cpu-bind=cores ./wrap_dcgmi_container.sh $exe $input"
+DCGM_SAMPLE_RATE=1000
+
+command="srun -N 1 -n $SLURM_NTASKS -c $SLURM_CPUS_PER_TASK --cpu-bind=cores ./wrap_dcgmi_container.sh $exe $input"
 
 echo $command
 

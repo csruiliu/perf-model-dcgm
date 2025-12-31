@@ -59,9 +59,6 @@ if [[ $SLURM_LOCALID -eq 0 ]]; then
     # For Perlmutter
     podman-hpc exec -it dcgm-container dcgmi dmon -d $dcgm_delay -i 0 -e $dcgm_metrics > $RESULTS_DIR/$dcgm_outfile &
     
-    # For Lawrencium, make sure the GPU index before using
-    singularity exec instance://dcgm-instance dcgmi dmon -d $dcgm_delay -i 6 -e $dcgm_metrics > ${RESULTS_DIR}/$dcgm_outfile &
-
     dcgmi_pid=$!
 fi
 
@@ -71,3 +68,4 @@ if [[ $SLURM_LOCALID -eq 0 ]]; then
     kill -9 $dcgmi_pid
     wait $! 2>/dev/null
 fi
+
