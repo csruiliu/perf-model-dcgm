@@ -30,14 +30,11 @@ Si_WFN_folder=${N10_BGW}/Si_WFN_folder
 
 Si214_WFN_folder=${Si_WFN_folder}/Si214/WFN_file
 
-# export these two variables for wrap_dcgmi_container.sh
-export RESULTS_DIR="${BGW_PM}/results/SIG_SMALL_FP64_${SLURM_JOB_ID}"
-export DCGM_DELAY=1000
+RESULTS_DIR="${BGW_PM}/results/SIG_SMALL_FP64_${SLURM_JOB_ID}"
 
 mkdir -p $RESULTS_DIR
 #stripe_large $RESULTS_DIR
 cd    $RESULTS_DIR
-
 ln -s ${N10_BGW_EXEC}/sigma.cplx.x .
 NNPOOL=2
 cat ${BGW_COMM}/sigma-si214.inp | sed "s/NNPOOL/${NNPOOL}/g" > sigma.inp
@@ -59,12 +56,16 @@ export BGW_WFN_HDF5_INDEPENDENT=1
 
 DCGM_PATH="${BGW_PM}/wrap_dcgmi_container.sh"
 
+# export these two variables for wrap_dcgmi_container.sh 
+export RESULTS_DIR
+export DCGM_DELAY=1000
+
 start=$(date +%s.%N)
 srun -N 1 -c 32 --ntasks-per-node=1 --gpus-per-node=1 --cpu-bind=cores ${DCGM_PATH} ./sigma.cplx.x
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
-printf "Elapsed Time: %.2f seconds\n" $elapsed > sig_small_fp64_${DCGM_DELAY}_runtime.out
+printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/sig_small_fp64_${DCGM_DELAY}_runtime.out
 
 unlink WFN_inner.h5
 unlink RHO
