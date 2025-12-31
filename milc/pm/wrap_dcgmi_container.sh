@@ -1,15 +1,8 @@
 #!/bin/bash
-#Usage:  dcgm_delay=1000 srun wrap_dcgmi.sh
-#   or:                  srun wrap_dcgmi.sh
-
 
 #sampling interval (ms)
-if [ -z ${dcgm_delay+x} ]; then
-    dcgm_delay=1000
-    #echo "dcgm_delay not set; using default: $dcgm_delay"
-else
-    : #echo "dcgm_delay set by user: $dcgm_delay"
-fi
+: ${DCGM_DELAY:=42}
+echo "DCGM_DELAY: $DCGM_DELAY"
 
 #use `dcgmi dmon -l` to get the list of available metrics and their field_id
 #comment/uncomment metrics as deeded
