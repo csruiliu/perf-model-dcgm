@@ -2,6 +2,7 @@
 
 #sampling interval (ms)
 : ${DCGM_DELAY:=42}
+echo "DCGM_DELAY: $DCGM_DELAY"
 
 #use `dcgmi dmon -l` to get the list of available metrics and their field_id
 #comment/uncomment metrics as deeded
