@@ -40,5 +40,4 @@ echo $command
 
 $command > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
 
-#unlink wrap_dcgmi.sh
 unlink common
