@@ -23,18 +23,16 @@ MILC_DIR="/pscratch/sd/r/ruiliu/milc-pm-a100-fp32"
 MILC_QCD_DIR=${MILC_DIR}/milc_qcd
 LATTICE_DIR=${MILC_DIR}/lattices
 
-if [ ! -d lattices ]; then
-    ln -s $LATTICE_DIR ./lattices
-fi
-
 MILC_COMM="/global/homes/r/ruiliu/perf-model-dcgm/milc/common"
 MILC_PM="/global/homes/r/ruiliu/perf-model-dcgm/milc/pm"
 
 RESULTS_DIR="/global/homes/r/ruiliu/perf-model-dcgm/milc/pm/results/MILC_TINY_FP32_${SLURM_JOBID}"
 mkdir -p ${RESULTS_DIR}
 cd ${RESULTS_DIR}
+
+ln -s $LATTICE_DIR .
 ln -s ${MILC_PM}/wrap_dcgmi_container.sh .
-ln -s ${MILC_COMM}/input_4864 .
+ln -s ${MILC_COMM}/input_4864_1node ./input_4864
 ln -s ${MILC_COMM}/rat.m001907m05252m6382 .
 
 bind="${MILC_COMM}/bind4-perlmutter.sh"
@@ -70,3 +68,4 @@ printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/runtime.out
 unlink wrap_dcgmi_container.sh
 unlink input_4864
 unlink rat.m001907m05252m6382
+unlink lattices

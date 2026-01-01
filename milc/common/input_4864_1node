@@ -3,8 +3,8 @@
     ny 48
     nz 48
     nt 64
-    node_geometry 1 1 1 4
-    ionode_geometry 1 1 1 4
+    node_geometry 1 1 1 1
+    ionode_geometry 1 1 1 1
     iseed 571213
     n_pseudo 5
     load_rhmc_params rat.m001907m05252m6382
