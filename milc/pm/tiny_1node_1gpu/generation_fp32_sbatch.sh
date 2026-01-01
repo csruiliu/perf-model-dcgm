@@ -26,7 +26,14 @@ LATTICE_DIR=${MILC_DIR}/lattices
 MILC_COMM="/global/homes/r/ruiliu/perf-model-dcgm/milc/common"
 MILC_PM="/global/homes/r/ruiliu/perf-model-dcgm/milc/pm"
 
-RESULTS_DIR="/global/homes/r/ruiliu/perf-model-dcgm/milc/pm/results/MILC_TINY_FP32_${SLURM_JOBID}"
+# Tuning results are stored in qudatune_dir.
+qudatune_dir="$PWD/qudatune-generation-fp32"
+export QUDA_RESOURCE_PATH=${qudatune_dir}
+if [ ! -d ${qudatune_dir} ]; then
+    mkdir ${qudatune_dir}
+fi
+
+RESULTS_DIR="${MILC_PM}/results/MILC_TINY_FP32_${SLURM_JOBID}"
 mkdir -p ${RESULTS_DIR}
 cd ${RESULTS_DIR}
 
@@ -46,13 +53,6 @@ export OMP_PROC_BIND=spread
 export QUDA_ENABLE_GDR=1
 export QUDA_MILC_HISQ_RECONSTRUCT=13
 export QUDA_MILC_HISQ_RECONSTRUCT_SLOPPY=9
-
-# Tuning results are stored in qudatune_dir.
-qudatune_dir="${RESULTS_DIR}/qudatune"
-export QUDA_RESOURCE_PATH=${qudatune_dir}
-if [ ! -d ${qudatune_dir} ]; then
-    mkdir ${qudatune_dir}
-fi
 
 # export these two variables for wrap_dcgmi_container.sh 
 export RESULTS_DIR

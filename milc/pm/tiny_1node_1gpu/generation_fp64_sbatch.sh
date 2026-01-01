@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH -C gpu&hbm80g
-#SBATCH -t 7:30:00
+#SBATCH -t 4:30:00
 #SBATCH -A nstaff
 #SBATCH --job-name=milc-tiny
 #SBATCH -q sow
@@ -23,18 +23,23 @@ MILC_DIR="/pscratch/sd/r/ruiliu/milc-pm-a100-fp64"
 MILC_QCD_DIR=${MILC_DIR}/milc_qcd
 LATTICE_DIR=${MILC_DIR}/lattices
 
-if [ ! -d lattices ]; then
-    ln -s $LATTICE_DIR ./lattices
-fi
-
 MILC_COMM="/global/homes/r/ruiliu/perf-model-dcgm/milc/common"
 MILC_PM="/global/homes/r/ruiliu/perf-model-dcgm/milc/pm"
 
-RESULTS_DIR="/global/homes/r/ruiliu/perf-model-dcgm/milc/pm/results/MILC_TINY_FP64_${SLURM_JOBID}"
+# Tuning results are stored in qudatune_dir.
+qudatune_dir="$PWD/qudatune-generation-fp64"
+export QUDA_RESOURCE_PATH=${qudatune_dir}
+if [ ! -d ${qudatune_dir} ]; then
+    mkdir ${qudatune_dir}
+fi
+
+RESULTS_DIR="${MILC_PM}/results/MILC_TINY_FP64_${SLURM_JOBID}"
 mkdir -p ${RESULTS_DIR}
 cd ${RESULTS_DIR}
+
+ln -s $LATTICE_DIR .
 ln -s ${MILC_PM}/wrap_dcgmi_container.sh .
-ln -s ${MILC_COMM}/input_4864 .
+ln -s ${MILC_COMM}/input_4864_1node ./input_4864
 ln -s ${MILC_COMM}/rat.m001907m05252m6382 .
 
 bind="${MILC_COMM}/bind4-perlmutter.sh"
@@ -49,19 +54,12 @@ export QUDA_ENABLE_GDR=1
 export QUDA_MILC_HISQ_RECONSTRUCT=13
 export QUDA_MILC_HISQ_RECONSTRUCT_SLOPPY=9
 
-# Tuning results are stored in qudatune_dir.
-qudatune_dir="${RESULTS_DIR}/qudatune"
-export QUDA_RESOURCE_PATH=${qudatune_dir}
-if [ ! -d ${qudatune_dir} ]; then
-    mkdir ${qudatune_dir}
-fi
-
 # export these two variables for wrap_dcgmi_container.sh 
 export RESULTS_DIR
 export DCGM_DELAY=1000
 
 start=$(date +%s.%N)
-srun -n $SLURM_NTASKS -c $SLURM_CPUS_PER_TASK --gpus-per-node=1 --cpu-bind=cores ./wrap_dcgmi_container.sh $exe $input
+srun -N 1 -n $SLURM_NTASKS -c $SLURM_CPUS_PER_TASK --gpus-per-node=1 --cpu-bind=cores ./wrap_dcgmi_container.sh $exe $input
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
@@ -70,3 +68,4 @@ printf "Elapsed Time: %.2f seconds\n" $elapsed > ${RESULTS_DIR}/runtime.out
 unlink wrap_dcgmi_container.sh
 unlink input_4864
 unlink rat.m001907m05252m6382
+unlink lattices

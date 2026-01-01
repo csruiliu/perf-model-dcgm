@@ -53,7 +53,7 @@ if [ $? -ne 0 ]; then
 fi
 
 #############################################
-# Part 2: Build MILC
+# Part 2: Build MILC (Generation)
 #############################################
 
 cd $BASE_DIRECTORY
