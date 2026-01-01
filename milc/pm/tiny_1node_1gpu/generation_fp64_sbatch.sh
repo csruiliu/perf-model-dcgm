@@ -33,7 +33,7 @@ if [ ! -d ${qudatune_dir} ]; then
     mkdir ${qudatune_dir}
 fi
 
-RESULTS_DIR="${MILC_PM}/results/MILC_TINY_FP64_${SLURM_JOBID}"
+RESULTS_DIR="${MILC_PM}/results/MILC_TINY_FP64_${SLURM_JOB_ID}"
 mkdir -p ${RESULTS_DIR}
 cd ${RESULTS_DIR}
 

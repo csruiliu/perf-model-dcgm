@@ -4,7 +4,7 @@
 # salloc -p es2 -A pc_perfume -q es2_normal --nodes=1 --ntasks=1 --cpus-per-task=16 --gres=gpu:H100:1 -t 12:00:00
 
 # Start Singularity server first
-# singularity instance start --fakeroot --nv --writable-tmpfs --bind /tmp:/tmp --network=none docker://nvidia/dcgm:4.4.1-2-ubuntu22.04 dcgm-instance
+# singularity instance start --fakeroot --nv --writable-tmpfs --bind /tmp:/tmp --bind /global/home/users/rliu5:/global/home/users/rliu5 --network=none docker://nvidia/dcgm:4.4.1-2-ubuntu22.04 dcgm-instance
 
 # singularity exec instance://dcgm-instance nv-hostengine -n &
 

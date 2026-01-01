@@ -30,7 +30,7 @@ LAMMPS_COMM="/global/homes/r/ruiliu/perf-model-dcgm/lammps/common"
 
 LAMMPS_PM="/global/homes/r/ruiliu/perf-model-dcgm/lammps/pm"
 
-RESULTS_DIR="${LAMMPS_PM}/results/LPS_SMALL_FP32_${SLURM_JOBID}"
+RESULTS_DIR="${LAMMPS_PM}/results/LPS_SMALL_FP32_${SLURM_JOB_ID}"
 
 mkdir -p ${RESULTS_DIR}
 cd    ${RESULTS_DIR}
