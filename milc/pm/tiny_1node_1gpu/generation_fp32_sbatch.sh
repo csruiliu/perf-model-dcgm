@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -C gpu&hbm80g
+#SBATCH -C gpu&hbm40g
 #SBATCH -t 4:30:00
 #SBATCH -A nstaff
 #SBATCH --job-name=milc-tiny
