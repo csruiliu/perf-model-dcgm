@@ -69,3 +69,6 @@ unlink wrap_dcgmi_container.sh
 unlink input_4864
 unlink rat.m001907m05252m6382
 unlink lattices
+
+rm l4864f211b600m001907m05252m6382i.420x
+rm l4864f211b600m001907m05252m6382i.420x.info

@@ -8,8 +8,6 @@ LATTICE_DIR="${N10_MILC}/lattices"
 MILC_COMM="/global/home/users/rliu5/perf-model-dcgm/milc/common"
 MILC_LRC="/global/home/users/rliu5/perf-model-dcgm/milc/lrc"
 
-DCGM_PATH="${MILC_LRC}/wrap_dcgmi_container.sh"
-
 # Tuning results are stored in qudatune_dir.
 qudatune_dir="$PWD/qudatune-generation-rtx8000-fp32"
 export QUDA_RESOURCE_PATH=${qudatune_dir}
@@ -42,7 +40,7 @@ export RESULTS_DIR
 export DCGM_DELAY=1000
 
 start=$(date +%s.%N)
-srun -N 1 -n 1 -c 16 --gpus-per-node=1 --cpu-bind=cores ${DCGM_PATH} $exe $input > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
+srun -N 1 -n 1 -c 16 --gpus-per-node=1 --cpu-bind=cores $exe $input > ${RESULTS_DIR}/${SLURM_JOB_ID}.out
 end=$(date +%s.%N)
 elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
@@ -52,3 +50,5 @@ unlink input_4864
 unlink rat.m001907m05252m6382
 unlink lattices
 
+rm l4864f211b600m001907m05252m6382i.420x
+rm l4864f211b600m001907m05252m6382i.420x.info
