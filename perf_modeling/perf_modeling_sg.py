@@ -197,12 +197,14 @@ class TargetPredictor(BaseProfiler):
             for i, key in enumerate(self.SMOCC_LEVELS):
                 # Calculate kernel scale (minimum of all constraints)
                 kernel_scale = min(
-                    gpu_scale_calc.scale_smocc[key],
-                    all_scales['dram'][i],
-                    all_scales['tensor'][i],
-                    all_scales['fp64'][i],
-                    all_scales['fp32'][i],
-                    all_scales['fp16'][i]
+                    x for x in [
+                        gpu_scale_calc.scale_smocc[key],
+                        all_scales['dram'][i],
+                        all_scales['tensor'][i],
+                        all_scales['fp64'][i],
+                        all_scales['fp32'][i],
+                        all_scales['fp16'][i]
+                    ] if x != 0
                 )
 
                 # Calculate kernel and total time
