@@ -100,7 +100,7 @@ ax.set_title('Relative Error Distribution Across SMOCC Variants',
 ax.grid(axis='y', alpha=0.3, linestyle='--')
 
 # Set y-axis range
-ax.set_ylim(-40, 70)
+ax.set_ylim(-60, 70)
 
 # Add legend
 from matplotlib.lines import Line2D
