@@ -1,63 +1,65 @@
 #!/bin/bash
-#SBATCH -J OMB_p2p_host
-#SBATCH -o OMB_p2p_host-%j.out 
-#SBATCH -N 2
-#SBATCH -C cpu
-#SBATCH -q sow
-#SBATCH -t 00:30:00
-#SBATCH -A nstaff
-#SBATCH --exclusive
-##SBATCH -w nid[004074,004138]
-#
-#The -w option specifies which nodes to use for the test,
-#thus controling the number of network hops between them.
-#It should be modified for each system because
-#the nid-topology differs with the system architechture.
-#The nodes identified above are maximally distant
-#on Perlmutter's Slingshot network.
 
-#The number of NICs(j) and CPU cores (k) per node
-#should be specified here.
-j=1   #NICs per node
-k=128 #Cores per node
+# Script to collect telemetry counters for a time window
+# Usage: ./cxi_snapshot.sh <prefix> <duration>
+# Example: ./cxi_snapshot.sh before 5
 
-#The paths to OMB and its point-to-point benchmarks
-#should be specified here
-OMB_DIR=../libexec/osu-micro-benchmarks
-OMB_PT2PT=${OMB_DIR}/mpi/pt2pt
-OMB_1SIDE=${OMB_DIR}/mpi/one-sided
+PREFIX=$1
+DURATION=${2:-5}  # Default 5 seconds if not specified
 
-export RESULTS_DIR=/pscratch/sd/r/ruiliu/osu-micro-benchmarks/results/OMB_${SLURM_JOB_ID}
-mkdir -p $RESULTS_DIR
+if [ -z "$PREFIX" ]; then
+    echo "Usage: $0 <prefix> [duration_seconds]"
+    exit 1
+fi
 
-# Time windows for before/after collection (in seconds)
-BEFORE_DURATION=10
-AFTER_DURATION=10
-MESSAGE_SIZE=5243000
-#MESSAGE_SIZE=1048576
+TELEM_PATH="/sys/class/cxi/cxi0/device/telemetry"
+SAMPLE_INTERVAL=1
 
-# Collect baseline counters BEFORE benchmarks
-echo "Collecting baseline telemetry for ${BEFORE_DURATION} seconds..."
-srun -N 2 --ntasks-per-node=1 ./cxi_snapshot.sh before ${BEFORE_DURATION}
+# Output file
+snapshot_file=cxi_snapshot.${PREFIX}.${SLURM_JOB_ID}-${SLURM_NODEID}.txt
 
-start=$(date +%s.%N)
+# Counter patterns to collect
+COUNTER_PATTERNS=(
+    "hni_pkts_sent_by_tc_*"
+    "hni_pkts_recv_by_tc_*"
+    "hni_rx_ok_*"
+    "hni_tx_ok_*"
+)
 
-# srun -N 2 -n 2 ${OMB_PT2PT}/osu_latency -m 8:8
-
-srun -N 2 -n 2 ./cxi_monitor.sh ${OMB_PT2PT}/osu_bibw -m $MESSAGE_SIZE:$MESSAGE_SIZE -i 1000
-
-#srun -N 2 --ntasks-per-node=${j} ${OMB_PT2PT}/osu_mbw_mr -m 16384:16384
-
-#srun -N 2 --ntasks-per-node=${k} ${OMB_PT2PT}/osu_mbw_mr -m 16384:16384
-
-#srun -N 2 -n 2 ${OMB_1SIDE}/osu_get_acc_latency -m 8:8 
-
-end=$(date +%s.%N)
-
-# Collect final counters AFTER benchmarks
-echo "Collecting final telemetry for ${AFTER_DURATION} seconds..."
-srun -N 2 --ntasks-per-node=1 ./cxi_snapshot.sh after ${AFTER_DURATION}
-
-elapsed=$(printf "%s - %s\n" $end $start | bc -l)
-
-printf "Elapsed Time: %.2f seconds\n" $elapsed > runtime.out
+if [ -d "${TELEM_PATH}" ]; then
+    start_time=$(date +%s.%N)
+    end_time=$(echo "$start_time + $DURATION" | bc)
+    
+    echo "Collecting '${PREFIX}' telemetry on node ${SLURM_NODEID} for ${DURATION} seconds..."
+    
+    (
+        while true; do
+            current_time=$(date +%s.%N)
+            
+            # Check if we've exceeded the duration
+            if (( $(echo "$current_time >= $end_time" | bc -l) )); then
+                break
+            fi
+            
+            echo "=== SAMPLE_START $current_time ==="
+            
+            cd ${TELEM_PATH}
+            
+            # Read all matching counters
+            for pattern in "${COUNTER_PATTERNS[@]}"; do
+                for file in $pattern; do
+                    if [ -f "$file" ]; then
+                        echo "$file $(cat $file 2>/dev/null)"
+                    fi
+                done
+            done
+            
+            echo "=== SAMPLE_END $current_time ==="
+            sleep $SAMPLE_INTERVAL
+        done
+    ) > ${RESULTS_DIR}/$snapshot_file
+    
+    echo "Snapshot '${PREFIX}' collection complete on node ${SLURM_NODEID}"
+else
+    echo "Warning: Telemetry path not found on node ${SLURM_NODEID}"
+fi
