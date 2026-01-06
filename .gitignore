@@ -8,6 +8,7 @@
 **/figures
 **/pm_data
 **/__pycache__
+**/*.txt
 
 # Prerequisites
 *.d
