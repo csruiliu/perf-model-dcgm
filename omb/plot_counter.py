@@ -191,6 +191,7 @@ def plot_counter(counter_name, directory=".", job_id=None, output_file=None):
         
         # Calculate and display differences for 'during' phase
         during_indices = [i for i, p in enumerate(phases) if p == 'during']
+        before_indices = [i for i, p in enumerate(phases) if p == 'before']
         after_indices = [i for i, p in enumerate(phases) if p == 'after']
         during_diffs = []
         
@@ -223,16 +224,16 @@ def plot_counter(counter_name, directory=".", job_id=None, output_file=None):
                                    alpha=0.8),
                            zorder=4)
         
-        # Calculate difference between first during and first after
-        first_during_to_first_after_diff = None
-        if during_indices and after_indices:
-            first_during_idx = during_indices[0]
+        # Calculate difference between last before and first after
+        last_before_to_first_after_diff = None
+        if before_indices and after_indices:
+            last_before_idx = before_indices[-1]
             first_after_idx = after_indices[0]
-            first_during_to_first_after_diff = values[first_after_idx] - values[first_during_idx]
+            last_before_to_first_after_diff = values[first_after_idx] - values[last_before_idx]
             
-            # Draw a line connecting first during to first after
-            ax.plot([relative_times[first_during_idx], relative_times[first_after_idx]],
-                   [values[first_during_idx], values[first_after_idx]],
+            # Draw a line connecting last before to first after
+            ax.plot([relative_times[last_before_idx], relative_times[first_after_idx]],
+                   [values[last_before_idx], values[first_after_idx]],
                    color='purple',
                    linewidth=2,
                    linestyle='--',
@@ -240,16 +241,16 @@ def plot_counter(counter_name, directory=".", job_id=None, output_file=None):
                    zorder=2)
             
             # Annotate this transition - shifted RIGHT to avoid overlap
-            mid_time = (relative_times[first_during_idx] + relative_times[first_after_idx]) / 2
-            mid_value = (values[first_during_idx] + values[first_after_idx]) / 2
+            mid_time = (relative_times[last_before_idx] + relative_times[first_after_idx]) / 2
+            mid_value = (values[last_before_idx] + values[first_after_idx]) / 2
             
             # Shift annotation to the right in data coordinates
             time_range = max(relative_times) - min(relative_times)
             shift_amount_right = time_range * 0.15  # Shift right by 15% of time range
             
-            ax.annotate(f'Δ={first_during_to_first_after_diff:.0f}',
+            ax.annotate(f'Δ={last_before_to_first_after_diff:.0f}',
                        xy=(mid_time + shift_amount_right, mid_value),
-                       xytext=(0, 20 if first_during_to_first_after_diff >= 0 else -20),
+                       xytext=(0, 20 if last_before_to_first_after_diff >= 0 else -20),
                        textcoords='offset points',
                        ha='center',
                        fontsize=10,
@@ -287,16 +288,16 @@ def plot_counter(counter_name, directory=".", job_id=None, output_file=None):
         ax.set_xlabel('Time (seconds from first measurement)', fontsize=11)
         ax.set_ylabel('Counter Value', fontsize=11)
         
-        # Add average difference and first-during-to-first-after difference to title
+        # Add average difference and last-before-to-first-after difference to title
         title = f'Node {node_id} - Counter: {counter_name}'
         if during_diffs:
             avg_diff = np.mean(during_diffs)
             title += f' (Avg Δ during: {avg_diff:.2f}'
-            if first_during_to_first_after_diff is not None:
-                title += f', Δ first_during→first_after: {first_during_to_first_after_diff:.2f}'
+            if last_before_to_first_after_diff is not None:
+                title += f', Δ last_before→first_after: {last_before_to_first_after_diff:.2f}'
             title += ')'
-        elif first_during_to_first_after_diff is not None:
-            title += f' (Δ first_during→first_after: {first_during_to_first_after_diff:.2f})'
+        elif last_before_to_first_after_diff is not None:
+            title += f' (Δ last_before→first_after: {last_before_to_first_after_diff:.2f})'
         
         ax.set_title(title, fontsize=12, fontweight='bold', pad=15)
         ax.legend(loc='best', fontsize=10)
@@ -315,10 +316,10 @@ def main():
         description='Plot counter values from CXI snapshot and telemetry files with multiple samples',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
-            Examples:
-            %(prog)s -c hni_pkts_sent_by_tc_0 -d /path/to/data
-            %(prog)s -c hni_pkts_sent_by_tc_0 -d ./results -j 47426802
-            %(prog)s -c hni_rx_ok_0 -d ./data -j 47426802 -o output.png
+Examples:
+  %(prog)s -c hni_pkts_sent_by_tc_0 -d /path/to/data
+  %(prog)s -c hni_pkts_sent_by_tc_0 -d ./results -j 47426802
+  %(prog)s -c hni_rx_ok_0 -d ./data -j 47426802 -o output.png
         ''')
     
     parser.add_argument('-c', '--counter',
