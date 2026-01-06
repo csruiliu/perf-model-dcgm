@@ -71,16 +71,21 @@ def plot_scatter(data_file, output_format='png'):
 
 def plot_combined_scatter(csv_files, output_format='png', output_name='combined'):
     """Generate a single scatter plot combining data from multiple CSV files"""
+    import numpy as np
+    
     # Create figure and axis
     fig, ax = plt.subplots(figsize=(8, 7))
     
     all_measured = []
     all_predicted = []
     
-    # Track whether we've added labels (only add once for legend)
-    labels_added = {'lower': False, 'middle': False, 'upper': False, 'mock': False}
+    # Collect all data points for each prediction type across all CSV files
+    all_lower_x, all_lower_y = [], []
+    all_middle_x, all_middle_y = [], []
+    all_upper_x, all_upper_y = [], []
+    all_mock_x, all_mock_y = [], []
     
-    # Process each CSV file
+    # Process each CSV file and collect points
     for idx, csv_file in enumerate(csv_files):
         # Read data from CSV file, skipping lines that start with #
         data = pd.read_csv(csv_file, comment='#')
@@ -92,27 +97,18 @@ def plot_combined_scatter(csv_files, output_format='png', output_name='combined'
         upper = data['smocc_upper'].values
         mock = data['mock_smocc'].values
         
-        # Plot all four prediction types for this file
-        # Only add label for the first occurrence of each type
-        ax.plot(measured, lower, color='red', linewidth=1.5, 
-                markersize=5, marker='X', alpha=0.6, 
-                label='lower' if not labels_added['lower'] else '')
-        labels_added['lower'] = True
+        # Collect points for each type
+        all_lower_x.extend(measured)
+        all_lower_y.extend(lower)
         
-        ax.plot(measured, middle, color='teal', linewidth=1.5, 
-                markersize=5, marker='*', alpha=0.6,
-                label='middle' if not labels_added['middle'] else '')
-        labels_added['middle'] = True
+        all_middle_x.extend(measured)
+        all_middle_y.extend(middle)
         
-        ax.plot(measured, upper, color='orange', linewidth=1.5, 
-                markersize=5, marker='s', alpha=0.6,
-                label='upper' if not labels_added['upper'] else '')
-        labels_added['upper'] = True
+        all_upper_x.extend(measured)
+        all_upper_y.extend(upper)
         
-        ax.plot(measured, mock, color='purple', linewidth=1.5, 
-                markersize=5, marker='o', alpha=0.6,
-                label='mock' if not labels_added['mock'] else '')
-        labels_added['mock'] = True
+        all_mock_x.extend(measured)
+        all_mock_y.extend(mock)
         
         # Collect all values for determining plot limits
         all_measured.extend(measured)
@@ -120,6 +116,48 @@ def plot_combined_scatter(csv_files, output_format='png', output_name='combined'
         all_predicted.extend(middle)
         all_predicted.extend(upper)
         all_predicted.extend(mock)
+    
+    def sort_points_by_angle(x, y):
+        """Sort points by angle around their centroid to form a smooth cycle"""
+        x = np.array(x)
+        y = np.array(y)
+        
+        # Calculate centroid
+        cx = np.mean(x)
+        cy = np.mean(y)
+        
+        # Calculate angle of each point relative to centroid
+        angles = np.arctan2(y - cy, x - cx)
+        
+        # Sort by angle
+        sorted_indices = np.argsort(angles)
+        
+        return x[sorted_indices], y[sorted_indices]
+    
+    # Sort and plot each prediction type as a closed cycle
+    lower_x, lower_y = sort_points_by_angle(all_lower_x, all_lower_y)
+    lower_x = list(lower_x) + [lower_x[0]]
+    lower_y = list(lower_y) + [lower_y[0]]
+    ax.plot(lower_x, lower_y, color='red', linewidth=1.5, 
+            markersize=5, marker='X', alpha=0.6, label='lower')
+    
+    middle_x, middle_y = sort_points_by_angle(all_middle_x, all_middle_y)
+    middle_x = list(middle_x) + [middle_x[0]]
+    middle_y = list(middle_y) + [middle_y[0]]
+    ax.plot(middle_x, middle_y, color='teal', linewidth=1.5, 
+            markersize=5, marker='*', alpha=0.6, label='middle')
+    
+    upper_x, upper_y = sort_points_by_angle(all_upper_x, all_upper_y)
+    upper_x = list(upper_x) + [upper_x[0]]
+    upper_y = list(upper_y) + [upper_y[0]]
+    ax.plot(upper_x, upper_y, color='orange', linewidth=1.5, 
+            markersize=5, marker='s', alpha=0.6, label='upper')
+    
+    mock_x, mock_y = sort_points_by_angle(all_mock_x, all_mock_y)
+    mock_x = list(mock_x) + [mock_x[0]]
+    mock_y = list(mock_y) + [mock_y[0]]
+    ax.plot(mock_x, mock_y, color='purple', linewidth=1.5, 
+            markersize=5, marker='o', alpha=0.6, label='mock')
     
     # Plot ideal diagonal line
     max_val = max(max(all_measured), max(all_predicted))
