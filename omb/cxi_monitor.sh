@@ -11,14 +11,14 @@ fi
 echo "$ROLE: Rank $SLURM_PROCID on $(hostname)" >> ${RESULTS_DIR}/runtime.out
 
 # Sampling interval (seconds)
-: ${TELEMETRY_INTERVAL:=1}
-echo "TELEMETRY_INTERVAL: $TELEMETRY_INTERVAL"
+: ${SAMPLE_INTERVAL:=1}
+echo "SAMPLE_INTERVAL: $SAMPLE_INTERVAL"
 
 # Telemetry path
 TELEM_PATH="/sys/class/cxi/cxi0/device/telemetry"
 
 # Output file
-telem_outfile=cxi_monitor.t${TELEMETRY_INTERVAL}.${SLURM_JOB_ID}-${SLURM_NODEID}.txt
+telem_outfile=cxi_monitor.${SLURM_JOB_ID}-${SLURM_NODEID}.txt
 
 # Counter patterns to collect
 COUNTER_PATTERNS=(

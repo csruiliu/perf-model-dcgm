@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -J OMB_p2p_host
-#SBATCH -o /pscratch/sd/r/ruiliu/osu-micro-benchmarks/results/OMB_%j/OMB_p2p_host-%j.out 
+#SBATCH -J OMB_1sided_host
+#SBATCH -o /pscratch/sd/r/ruiliu/osu-micro-benchmarks/results/OMB_%j/OMB_1sided_host-%j.out 
 #SBATCH -N 2
 #SBATCH -C cpu
 #SBATCH -q sow
@@ -33,13 +33,13 @@ mkdir -p $RESULTS_DIR
 # Time windows for before/after collection (in seconds)
 BEFORE_DURATION=10
 AFTER_DURATION=10
-#MESSAGE_SIZE=64
+MESSAGE_SIZE=1
+#MESSAGE_SIZE=5243000
 #MESSAGE_SIZE=1048576
-MESSAGE_SIZE=5243000
 
 export SAMPLE_INTERVAL=1
 
-ITER=10000
+ITER=500000
 
 # Collect baseline counters BEFORE benchmarks
 echo "Collecting baseline telemetry for ${BEFORE_DURATION} seconds..."
@@ -49,7 +49,7 @@ echo "=== Node Assignment for osu_bw ===" > $RESULTS_DIR/runtime.out
 
 start=$(date +%s.%N)
 
-srun -N 2 -n 2 ./cxi_monitor.sh ${OMB_PT2PT}/osu_bw -m $MESSAGE_SIZE:$MESSAGE_SIZE -i $ITER -x 0 H H
+srun -N 2 -n 2 ./cxi_monitor.sh ${OMB_1SIDE}/osu_put_bw -m $MESSAGE_SIZE:$MESSAGE_SIZE -i $ITER -x 0 H H
 
 end=$(date +%s.%N)
 

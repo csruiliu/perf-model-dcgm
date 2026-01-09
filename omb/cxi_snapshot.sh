@@ -13,7 +13,8 @@ if [ -z "$PREFIX" ]; then
 fi
 
 TELEM_PATH="/sys/class/cxi/cxi0/device/telemetry"
-SAMPLE_INTERVAL=1
+: ${SAMPLE_INTERVAL:=1}
+echo "SAMPLE_INTERVAL: $SAMPLE_INTERVAL"
 
 # Output file
 snapshot_file=cxi_snapshot.${PREFIX}.${SLURM_JOB_ID}-${SLURM_NODEID}.txt
