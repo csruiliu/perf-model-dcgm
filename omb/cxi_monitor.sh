@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Determine role based on SLURM_PROCID
+if [ "${SLURM_PROCID:-0}" -eq 0 ]; then
+  ROLE="SENDER"
+else
+  ROLE="RECEIVER"
+fi
+
+# Log rank and role
+echo "$ROLE: Rank $SLURM_PROCID on $(hostname)" >> ${RESULTS_DIR}/runtime.out
+
 # Sampling interval (seconds)
 : ${TELEMETRY_INTERVAL:=1}
 echo "TELEMETRY_INTERVAL: $TELEMETRY_INTERVAL"
