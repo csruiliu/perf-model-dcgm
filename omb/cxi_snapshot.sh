@@ -17,7 +17,7 @@ TELEM_PATH="/sys/class/cxi/cxi0/device/telemetry"
 echo "SAMPLE_INTERVAL: $SAMPLE_INTERVAL"
 
 # Output file
-snapshot_file=cxi_snapshot.${PREFIX}.${SLURM_JOB_ID}-${SLURM_NODEID}.txt
+snapshot_file=cxi_snapshot.${PREFIX}.${SLURM_JOB_ID}-$(hostname).txt
 
 # Counter patterns to collect
 COUNTER_PATTERNS=(
