@@ -30,6 +30,9 @@ OMB_1SIDE=${OMB_DIR}/mpi/one-sided
 export RESULTS_DIR=/pscratch/sd/r/ruiliu/osu-micro-benchmarks/results/OMB_${SLURM_JOB_ID}
 mkdir -p $RESULTS_DIR
 
+export MPICH_GNI_MAX_EAGER_MSG_SIZE=10485760
+export FI_CXI_RDZV_THRESHOLD=10485760
+
 # Time windows for before/after collection (in seconds)
 BEFORE_DURATION=10
 AFTER_DURATION=10
