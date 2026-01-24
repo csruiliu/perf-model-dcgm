@@ -47,7 +47,7 @@ if [[ $SLURM_LOCALID -eq 0 ]]; then
                 done
                 
                 echo "=== SAMPLE_END $timestamp ==="
-                sleep $TELEMETRY_INTERVAL
+                sleep $SAMPLE_INTERVAL
             done
         ) > ${RESULTS_DIR}/$telem_outfile &
         

@@ -56,7 +56,7 @@ if [ -d "${TELEM_PATH}" ]; then
             done
             
             echo "=== SAMPLE_END $current_time ==="
-            sleep $SAMPLE_INTERVAL
+            sleep ${SAMPLE_INTERVAL}
         done
     ) > ${RESULTS_DIR}/$snapshot_file
     
