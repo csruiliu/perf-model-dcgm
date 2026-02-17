@@ -36,13 +36,16 @@ export FI_CXI_RDZV_THRESHOLD=10485760
 # Time windows for before/after collection (in seconds)
 BEFORE_DURATION=10
 AFTER_DURATION=10
-#MESSAGE_SIZE=64
+#MESSAGE_SIZE=1
 #MESSAGE_SIZE=1048576
 MESSAGE_SIZE=5243000
 
 export SAMPLE_INTERVAL=1
 
-ITER=10000
+ITER=500000
+WARMUP_ITER=1000
+WINDOW_SIZE=1
+
 
 # Collect baseline counters BEFORE benchmarks
 echo "Collecting baseline telemetry for ${BEFORE_DURATION} seconds..."
@@ -52,7 +55,7 @@ echo "=== Node Assignment for osu_bw ===" > $RESULTS_DIR/runtime.out
 
 start=$(date +%s.%N)
 
-srun -N 2 -n 2 ./cxi_monitor.sh ${OMB_PT2PT}/osu_bw -m $MESSAGE_SIZE:$MESSAGE_SIZE -i $ITER -x 0 H H
+srun -N 2 -n 2 ./cxi_monitor.sh ${OMB_PT2PT}/osu_bw -m $MESSAGE_SIZE:$MESSAGE_SIZE -i $ITER -x $WARMUP_ITER -W $WINDOW_SIZE H H
 
 end=$(date +%s.%N)
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J OMB_1sided_host
-#SBATCH -o /pscratch/sd/r/ruiliu/osu-micro-benchmarks/results/OMB_%j/OMB_1sided_host-%j.out 
+#SBATCH -o /pscratch/sd/r/ruiliu/osu-micro-benchmarks/results/OMB_%j/OMB_1sided_host-%j.out
 #SBATCH -N 2
 #SBATCH -C cpu
 #SBATCH -q sow
@@ -36,27 +36,30 @@ export FI_CXI_RDZV_THRESHOLD=10485760
 # Time windows for before/after collection (in seconds)
 BEFORE_DURATION=10
 AFTER_DURATION=10
+
 MESSAGE_SIZE=1
-#MESSAGE_SIZE=5243000
 #MESSAGE_SIZE=1048576
+#MESSAGE_SIZE=5243000
 
 export SAMPLE_INTERVAL=1
 
 ITER=500000
+WARMUP_ITER=0
+WINDOW_SIZE=1
 
 # Collect baseline counters BEFORE benchmarks
 echo "Collecting baseline telemetry for ${BEFORE_DURATION} seconds..."
 srun -N 2 --ntasks-per-node=1 ./cxi_snapshot.sh before ${BEFORE_DURATION}
 
-echo "=== Node Assignment for osu_bw ===" > $RESULTS_DIR/runtime.out
+echo "=== Node Assignment ===" >$RESULTS_DIR/runtime.out
 
 start=$(date +%s.%N)
 
-srun -N 2 -n 2 ./cxi_monitor.sh ${OMB_1SIDE}/osu_put_bw -m $MESSAGE_SIZE:$MESSAGE_SIZE -i $ITER -x 0 H H
+srun -N 2 -n 2 ./cxi_monitor.sh ${OMB_1SIDE}/osu_put_bw -m $MESSAGE_SIZE:$MESSAGE_SIZE -i $ITER -x $WARMUP_ITER -W $WINDOW_SIZE H H
 
 end=$(date +%s.%N)
 
-echo "======================================" >> $RESULTS_DIR/runtime.out
+echo "======================================" >>$RESULTS_DIR/runtime.out
 
 # Collect final counters AFTER benchmarks
 echo "Collecting final telemetry for ${AFTER_DURATION} seconds..."
@@ -66,8 +69,8 @@ elapsed=$(printf "%s - %s\n" $end $start | bc -l)
 
 # Create runtime.out with node assignment info
 
-echo "" >> $RESULTS_DIR/runtime.out
-echo "MESSAGE_SIZE: ${MESSAGE_SIZE} Byte(s)" >> $RESULTS_DIR/runtime.out
-echo "ITERATIONS: $ITER" >> $RESULTS_DIR/runtime.out
-echo "SAMPLE_INTERVAL: $SAMPLE_INTERVAL" >> $RESULTS_DIR/runtime.out
-printf "Elapsed Time: %.2f seconds\n" $elapsed >> $RESULTS_DIR/runtime.out
+echo "" >>$RESULTS_DIR/runtime.out
+echo "MESSAGE_SIZE: ${MESSAGE_SIZE} Byte(s)" >>$RESULTS_DIR/runtime.out
+echo "ITERATIONS: $ITER" >>$RESULTS_DIR/runtime.out
+echo "SAMPLE_INTERVAL: $SAMPLE_INTERVAL" >>$RESULTS_DIR/runtime.out
+printf "Elapsed Time: %.2f seconds\n" $elapsed >>$RESULTS_DIR/runtime.out
